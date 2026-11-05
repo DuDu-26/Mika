@@ -1,0 +1,31 @@
+# 只在 fork 的 ci/ 分支上用来验证 PR 能编译、测试能过,不进 PR
+name: build-check
+on:
+  push:
+    branches: ["ci/**"]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: gradle/actions/setup-gradle@v4
+      - name: core 单测
+        run: ./gradlew :core:test --stacktrace
+      - name: app 单测(含各语言文字检查)
+        run: ./gradlew :app:testDebugUnitTest --stacktrace
+      - name: 编译 APK
+        run: ./gradlew :app:assembleDebug --stacktrace
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reports
+          path: |
+            **/build/reports/tests/
+            app/build/outputs/apk/debug/*.apk
+          if-no-files-found: ignore
