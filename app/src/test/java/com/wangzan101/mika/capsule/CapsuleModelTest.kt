@@ -445,6 +445,23 @@ class CapsuleModelTest {
         assertEquals(1f, CapsuleFade.alpha(CapsuleKind.HandedOver, 0, pill = false, idleFor = 60_000))
     }
 
+    @Test fun idleOpacityFollowsTheSettingButNeverWhenNeedingYou() {
+        // 没设过、认不出时是默认档,就是原来固定的 40%
+        assertEquals(CapsuleIdleOpacity.Medium, CapsuleIdleOpacity.parse(null))
+        assertEquals(CapsuleIdleOpacity.Medium, CapsuleIdleOpacity.parse("Unknown"))
+        assertEquals(CapsuleFade.BALL, CapsuleIdleOpacity.DEFAULT.alpha)
+        assertEquals(CapsuleIdleOpacity.Faint, CapsuleIdleOpacity.parse("Faint"))
+        for (level in CapsuleIdleOpacity.entries) {
+            assertEquals(level.name, level.alpha, CapsuleFade.alpha(CapsuleKind.Running, 0, pill = false, idleFor = 60_000, idle = level.alpha))
+            // 还没到时间、展开着、要你处理:不论哪一档都是实色
+            assertEquals(level.name, 1f, CapsuleFade.alpha(CapsuleKind.Running, 0, pill = false, idleFor = CapsuleFade.IDLE_MS - 1, idle = level.alpha))
+            assertEquals(level.name, 1f, CapsuleFade.alpha(CapsuleKind.Done, 0, pill = true, idleFor = 60_000, idle = level.alpha))
+            assertEquals(level.name, 1f, CapsuleFade.alpha(CapsuleKind.NeedConfirm, 1, pill = false, idleFor = 60_000, idle = level.alpha))
+        }
+        // 档位从实色到最淡排好,设置页按这个顺序列
+        assertEquals(CapsuleIdleOpacity.entries.sortedByDescending { it.alpha }, CapsuleIdleOpacity.entries)
+    }
+
     // ---------- 读屏 ----------
 
     @Test fun ballDescribesItsStatus() {

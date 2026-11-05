@@ -368,17 +368,31 @@ class CapsuleModel(private val reasonLabel: (String) -> String? = { null }) {
 }
 
 /**
- * 胶囊的透明度:一颗图标不碰它 [IDLE_MS] 后淡到 [BALL](圈和角标保持实色,由界面管);
- * 碰到或状态变了马上恢复(调用方从那一刻重新计时)。展开成胶囊时、要你处理时、「你来处理」那一条不淡。
+ * 胶囊的透明度:一颗图标不碰它 [IDLE_MS] 后淡到 [idle](默认 [BALL];设置 › 悬浮胶囊里可选,见 [CapsuleIdleOpacity]),
+ * 圈和角标保持实色,由界面管;碰到或状态变了马上恢复(调用方从那一刻重新计时)。
+ * 展开成胶囊时、要你处理时、「你来处理」那一条不淡,不论设置选了哪一档。
  */
 object CapsuleFade {
     const val IDLE_MS = 3_000L
     const val BALL = 0.4f
 
-    /** [idleFor] 是离上次碰到或状态变了过了多久。 */
-    fun alpha(kind: CapsuleKind, needCount: Int, pill: Boolean, idleFor: Long): Float = when {
+    /** [idleFor] 是离上次碰到或状态变了过了多久;[idle] 是不碰它时淡到多少。 */
+    fun alpha(kind: CapsuleKind, needCount: Int, pill: Boolean, idleFor: Long, idle: Float = BALL): Float = when {
         pill || kind.needsYou || needCount > 0 || kind == CapsuleKind.HandedOver -> 1f
         idleFor < IDLE_MS -> 1f
-        else -> BALL
+        else -> idle
+    }
+}
+
+/**
+ * 设置 › 悬浮胶囊里「不碰它时」的四档:一颗图标不碰它 [CapsuleFade.IDLE_MS] 后淡到 [alpha]。
+ * 存成名字,认不出(没设过、旧版本)时是默认的 [Medium],就是原来固定的 [CapsuleFade.BALL]。
+ */
+enum class CapsuleIdleOpacity(val alpha: Float) {
+    Solid(1f), Light(0.7f), Medium(CapsuleFade.BALL), Faint(0.2f);
+
+    companion object {
+        val DEFAULT = Medium
+        fun parse(name: String?): CapsuleIdleOpacity = entries.firstOrNull { it.name == name } ?: DEFAULT
     }
 }

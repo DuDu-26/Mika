@@ -161,4 +161,12 @@
     <string name="mcp_servers_status_fail">연결 실패: %1$s</string>
     <string name="mcp_servers_refresh_all">모두 테스트</string>
     <string name="mcp_servers_allowlist">허용할 도구(쉼표로 구분, 비우면 전체)</string>
+    <string name="capsule_opacity_label">건드리지 않을 때</string>
+    <string name="capsule_opacity_solid">흐려지지 않음</string>
+    <string name="capsule_opacity_light">약간 흐리게</string>
+    <string name="capsule_opacity_medium">보통(기본)</string>
+    <string name="capsule_opacity_faint">아주 흐리게</string>
+    <string name="capsule_opacity_solid_detail">항상 선명하게 표시</string>
+    <string name="capsule_opacity_fade_to">약 %1$d%%까지 흐려져요</string>
+    <string name="capsule_opacity_note">3초 동안 건드리지 않으면 흐려지고, 건드리면 바로 돌아와요. 바깥 고리와 배지는 그대로예요. 확인이 필요할 때, 한 줄 글자를 보여 줄 때, 카드를 열었을 때는 흐려지지 않아요.</string>
 </resources>

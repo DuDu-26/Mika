@@ -181,4 +181,12 @@
     <string name="mcp_servers_status_fail">فشل الاتصال: %1$s</string>
     <string name="mcp_servers_refresh_all">اختبار الكل</string>
     <string name="mcp_servers_allowlist">الأدوات المسموح بها (مفصولة بفواصل، فارغ = الكل)</string>
+    <string name="capsule_opacity_label">عند عدم اللمس</string>
+    <string name="capsule_opacity_solid">بلا تلاشٍ</string>
+    <string name="capsule_opacity_light">باهتة قليلًا</string>
+    <string name="capsule_opacity_medium">متوسطة (افتراضي)</string>
+    <string name="capsule_opacity_faint">باهتة جدًا</string>
+    <string name="capsule_opacity_solid_detail">ظاهرة بالكامل دائمًا</string>
+    <string name="capsule_opacity_fade_to">تبهت إلى نحو %1$d%%</string>
+    <string name="capsule_opacity_note">لا تبهت إلا بعد 3 ثوانٍ من عدم اللمس، وتعود فور لمسها. تبقى الحلقة والشارة واضحتين، ولا تبهت عندما يحتاج أمر ما إليك أو عند عرض سطر نصي أو عند فتح البطاقة.</string>
 </resources>

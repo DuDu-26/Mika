@@ -27,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.wangzan101.mika.capsule.CapsuleIdleOpacity
 import com.wangzan101.mika.capsule.CapsuleMode
 import com.wangzan101.mika.core.shell.BuiltinShellStatus
 import com.wangzan101.mika.settings.ChannelRow
@@ -49,6 +50,7 @@ import com.wangzan101.mika.ui.theme.MikaIcons
 import com.wangzan101.mika.ui.theme.MikaTheme
 import com.wangzan101.mika.ui.theme.MikaType
 import com.wangzan101.mika.core.cap.phone.OperatingPace
+import kotlin.math.roundToInt
 
 // ---------- 手机操作 ----------
 
@@ -353,11 +355,33 @@ object CapsuleSettingsCopy {
         CapsuleMode.DuringTasks -> tr(R.string.capsule_mode_tasks_detail)
         CapsuleMode.Always -> tr(R.string.capsule_mode_always_detail)
     }
+
+    /** 「不碰它时」一组的标题和说明。 */
+    val OPACITY_LABEL: String get() = tr(R.string.capsule_opacity_label)
+    val OPACITY_NOTE: String get() = tr(R.string.capsule_opacity_note)
+
+    fun label(level: CapsuleIdleOpacity): String = when (level) {
+        CapsuleIdleOpacity.Solid -> tr(R.string.capsule_opacity_solid)
+        CapsuleIdleOpacity.Light -> tr(R.string.capsule_opacity_light)
+        CapsuleIdleOpacity.Medium -> tr(R.string.capsule_opacity_medium)
+        CapsuleIdleOpacity.Faint -> tr(R.string.capsule_opacity_faint)
+    }
+
+    /** 「一直是实色」,或「淡到约 70%」:百分比按 [CapsuleIdleOpacity.alpha] 算,只有一处定数。 */
+    fun detail(level: CapsuleIdleOpacity): String =
+        if (level == CapsuleIdleOpacity.Solid) tr(R.string.capsule_opacity_solid_detail)
+        else tr(R.string.capsule_opacity_fade_to, (level.alpha * 100).roundToInt())
 }
 
-/** 设置 › 悬浮胶囊:关闭 / 有任务时显示(默认) / 一直显示,选了当场生效。 */
+/**
+ * 设置 › 悬浮胶囊:关闭 / 有任务时显示 / 一直显示(默认),下面一组是不碰它时淡到多少(四档,默认约 40%);
+ * 都是选了当场生效。胶囊关着时淡不淡用不上,那一组变灰、点不了。
+ */
 @Composable
-fun CapsuleScreen(mode: CapsuleMode, onMode: (CapsuleMode) -> Unit, onBack: () -> Unit) {
+fun CapsuleScreen(
+    mode: CapsuleMode, onMode: (CapsuleMode) -> Unit, onBack: () -> Unit,
+    opacity: CapsuleIdleOpacity = CapsuleIdleOpacity.DEFAULT, onOpacity: (CapsuleIdleOpacity) -> Unit = {},
+) {
     PageScaffold(CapsuleSettingsCopy.TITLE, onBack) {
         GroupCard {
             CapsuleMode.entries.forEachIndexed { i, m ->
@@ -368,6 +392,16 @@ fun CapsuleScreen(mode: CapsuleMode, onMode: (CapsuleMode) -> Unit, onBack: () -
             }
         }
         FooterNote(CapsuleSettingsCopy.FOOTNOTE)
+        GroupLabel(CapsuleSettingsCopy.OPACITY_LABEL)
+        GroupCard {
+            CapsuleIdleOpacity.entries.forEachIndexed { i, level ->
+                RadioRow(
+                    CapsuleSettingsCopy.label(level), selected = level == opacity, onClick = { onOpacity(level) },
+                    subtitle = CapsuleSettingsCopy.detail(level), first = i == 0, enabled = mode != CapsuleMode.Off,
+                )
+            }
+        }
+        FooterNote(CapsuleSettingsCopy.OPACITY_NOTE)
         FooterNote(CapsuleSettingsCopy.BACKGROUND)
     }
 }

@@ -175,4 +175,12 @@
     <string name="mcp_servers_status_fail">Connection failed: %1$s</string>
     <string name="mcp_servers_refresh_all">Test all</string>
     <string name="mcp_servers_allowlist">Allowed tools (comma separated, empty = all)</string>
+    <string name="capsule_opacity_label">When untouched</string>
+    <string name="capsule_opacity_solid">Don’t fade</string>
+    <string name="capsule_opacity_light">Slightly faded</string>
+    <string name="capsule_opacity_medium">Medium (default)</string>
+    <string name="capsule_opacity_faint">Very faded</string>
+    <string name="capsule_opacity_solid_detail">Always fully visible</string>
+    <string name="capsule_opacity_fade_to">Fades to about %1$d%%</string>
+    <string name="capsule_opacity_note">It only fades after 3 seconds untouched and comes back as soon as you touch it. The ring and badge stay solid, and it never fades when something needs you, when it shows a line of text, or while the card is open.</string>
 </resources>

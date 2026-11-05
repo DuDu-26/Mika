@@ -161,4 +161,12 @@
     <string name="mcp_servers_status_fail">Gagal terhubung: %1$s</string>
     <string name="mcp_servers_refresh_all">Uji semua</string>
     <string name="mcp_servers_allowlist">Alat yang diizinkan (dipisah koma, kosong = semua)</string>
+    <string name="capsule_opacity_label">Saat tidak disentuh</string>
+    <string name="capsule_opacity_solid">Tidak memudar</string>
+    <string name="capsule_opacity_light">Sedikit pudar</string>
+    <string name="capsule_opacity_medium">Sedang (default)</string>
+    <string name="capsule_opacity_faint">Sangat pudar</string>
+    <string name="capsule_opacity_solid_detail">Selalu terlihat penuh</string>
+    <string name="capsule_opacity_fade_to">Memudar hingga sekitar %1$d%%</string>
+    <string name="capsule_opacity_note">Baru memudar setelah 3 detik tidak disentuh dan kembali begitu Anda menyentuhnya. Cincin dan lencana tetap jelas, dan tidak memudar saat ada yang perlu Anda tangani, saat menampilkan satu baris teks, atau saat kartu terbuka.</string>
 </resources>

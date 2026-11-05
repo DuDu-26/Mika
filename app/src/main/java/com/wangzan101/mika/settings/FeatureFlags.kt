@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.wangzan101.mika.capsule.CapsuleDock
 import com.wangzan101.mika.capsule.CardDocking
+import com.wangzan101.mika.capsule.CapsuleIdleOpacity
 import com.wangzan101.mika.capsule.CapsuleMode
 import com.wangzan101.mika.capsule.DockSide
 import com.wangzan101.mika.core.agent.SpeedFlags
@@ -101,6 +102,13 @@ class FeatureFlags(private val prefs: SharedPreferences) {
         prefs.edit().putString(CAPSULE_MODE, mode.name).commit()
     }
 
+    /** 悬浮胶囊不碰它时淡到多少(四档,默认和原来一样约 40%)。 */
+    fun capsuleIdleOpacity(): CapsuleIdleOpacity = CapsuleIdleOpacity.parse(prefs.getString(CAPSULE_IDLE_OPACITY, null))
+
+    fun setCapsuleIdleOpacity(level: CapsuleIdleOpacity) {
+        prefs.edit().putString(CAPSULE_IDLE_OPACITY, level.name).commit()
+    }
+
     /** 胶囊开关的当前值,之后每次改动再发一次。 */
     fun capsuleModeChanges(): Flow<CapsuleMode> = callbackFlow {
         val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
@@ -153,6 +161,7 @@ class FeatureFlags(private val prefs: SharedPreferences) {
         private const val SELF_CONFIG = "self_config"
         private const val THEME_MODE = "theme_mode"
         private const val CAPSULE_MODE = "capsule_mode"
+        private const val CAPSULE_IDLE_OPACITY = "capsule_idle_opacity"
         private const val CAPSULE_SIDE = "capsule_side"
         private const val CAPSULE_HEIGHT = "capsule_height"
         private const val CAPSULE_CARD_HEIGHT = "capsule_card_height"
