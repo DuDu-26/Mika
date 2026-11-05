@@ -162,11 +162,11 @@
     <string name="mcp_servers_refresh_all">すべてテスト</string>
     <string name="mcp_servers_allowlist">許可するツール(カンマ区切り、空欄はすべて)</string>
     <string name="capsule_opacity_label">触れていないとき</string>
-    <string name="capsule_opacity_solid">薄くしない</string>
-    <string name="capsule_opacity_light">少し薄く</string>
-    <string name="capsule_opacity_medium">標準（デフォルト）</string>
+    <string name="capsule_opacity_pct">%1$d%%</string>
+    <string name="capsule_opacity_pct_named">%1$d%% · %2$s</string>
     <string name="capsule_opacity_faint">かなり薄く</string>
-    <string name="capsule_opacity_solid_detail">常にくっきり表示</string>
-    <string name="capsule_opacity_fade_to">約 %1$d%% まで薄くなります</string>
-    <string name="capsule_opacity_note">3 秒触れないと薄くなり、触れるとすぐ戻ります。外側の輪とバッジは薄くなりません。対応が必要なとき、1 行の文字を表示しているとき、カードを開いているときも薄くなりません。</string>
+    <string name="capsule_opacity_medium">標準（デフォルト）</string>
+    <string name="capsule_opacity_light">少し薄く</string>
+    <string name="capsule_opacity_solid">薄くしない</string>
+    <string name="capsule_opacity_note">20・40・70・100 の近くまでドラッグするとそこに吸い付きます。3 秒触れないと薄くなり、触れるとすぐ戻ります。外側の輪とバッジは薄くならず、対応が必要なとき、1 行の文字を表示しているとき、カードを開いているときも薄くなりません。</string>
 </resources>

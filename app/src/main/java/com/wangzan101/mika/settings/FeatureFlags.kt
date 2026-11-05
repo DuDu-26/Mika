@@ -102,11 +102,13 @@ class FeatureFlags(private val prefs: SharedPreferences) {
         prefs.edit().putString(CAPSULE_MODE, mode.name).commit()
     }
 
-    /** 悬浮胶囊不碰它时淡到多少(四档,默认和原来一样约 40%)。 */
-    fun capsuleIdleOpacity(): CapsuleIdleOpacity = CapsuleIdleOpacity.parse(prefs.getString(CAPSULE_IDLE_OPACITY, null))
+    /** 悬浮胶囊不碰它时淡到百分之几(20–100;没设过时 40,和原来一样)。 */
+    fun capsuleIdleOpacity(): Int =
+        if (prefs.contains(CAPSULE_IDLE_OPACITY)) CapsuleIdleOpacity.clamp(prefs.getInt(CAPSULE_IDLE_OPACITY, CapsuleIdleOpacity.DEFAULT))
+        else CapsuleIdleOpacity.DEFAULT
 
-    fun setCapsuleIdleOpacity(level: CapsuleIdleOpacity) {
-        prefs.edit().putString(CAPSULE_IDLE_OPACITY, level.name).commit()
+    fun setCapsuleIdleOpacity(percent: Int) {
+        prefs.edit().putInt(CAPSULE_IDLE_OPACITY, CapsuleIdleOpacity.clamp(percent)).commit()
     }
 
     /** 胶囊开关的当前值,之后每次改动再发一次。 */
@@ -161,7 +163,7 @@ class FeatureFlags(private val prefs: SharedPreferences) {
         private const val SELF_CONFIG = "self_config"
         private const val THEME_MODE = "theme_mode"
         private const val CAPSULE_MODE = "capsule_mode"
-        private const val CAPSULE_IDLE_OPACITY = "capsule_idle_opacity"
+        private const val CAPSULE_IDLE_OPACITY = "capsule_idle_opacity_pct"
         private const val CAPSULE_SIDE = "capsule_side"
         private const val CAPSULE_HEIGHT = "capsule_height"
         private const val CAPSULE_CARD_HEIGHT = "capsule_card_height"

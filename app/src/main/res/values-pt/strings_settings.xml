@@ -170,11 +170,11 @@
     <string name="mcp_servers_refresh_all">Testar tudo</string>
     <string name="mcp_servers_allowlist">Ferramentas permitidas (separadas por vírgulas, vazio = todas)</string>
     <string name="capsule_opacity_label">Quando não está em uso</string>
-    <string name="capsule_opacity_solid">Não esmaecer</string>
-    <string name="capsule_opacity_light">Um pouco esmaecida</string>
-    <string name="capsule_opacity_medium">Média (padrão)</string>
+    <string name="capsule_opacity_pct">%1$d%%</string>
+    <string name="capsule_opacity_pct_named">%1$d%% · %2$s</string>
     <string name="capsule_opacity_faint">Bem esmaecida</string>
-    <string name="capsule_opacity_solid_detail">Sempre totalmente visível</string>
-    <string name="capsule_opacity_fade_to">Esmaece até cerca de %1$d%%</string>
-    <string name="capsule_opacity_note">Só esmaece depois de 3 segundos sem toque e volta assim que você toca. O anel e o selo continuam nítidos, e ela nunca esmaece quando algo precisa de você, quando mostra uma linha de texto ou com o cartão aberto.</string>
+    <string name="capsule_opacity_medium">Média (padrão)</string>
+    <string name="capsule_opacity_light">Um pouco esmaecida</string>
+    <string name="capsule_opacity_solid">Não esmaecer</string>
+    <string name="capsule_opacity_note">Arraste para perto de 20, 40, 70 ou 100 e ela se encaixa nesse valor. Só esmaece depois de 3 segundos sem toque e volta assim que você toca; o anel e o selo continuam nítidos, e ela nunca esmaece quando algo precisa de você, quando mostra uma linha de texto ou com o cartão aberto.</string>
 </resources>

@@ -174,11 +174,11 @@
     <string name="mcp_servers_refresh_all">Проверить все</string>
     <string name="mcp_servers_allowlist">Разрешённые инструменты (через запятую, пусто — все)</string>
     <string name="capsule_opacity_label">Когда не трогаете</string>
-    <string name="capsule_opacity_solid">Не затухать</string>
-    <string name="capsule_opacity_light">Чуть прозрачнее</string>
-    <string name="capsule_opacity_medium">Средне (по умолчанию)</string>
+    <string name="capsule_opacity_pct">%1$d%%</string>
+    <string name="capsule_opacity_pct_named">%1$d%% · %2$s</string>
     <string name="capsule_opacity_faint">Очень прозрачно</string>
-    <string name="capsule_opacity_solid_detail">Всегда полностью видна</string>
-    <string name="capsule_opacity_fade_to">Затухает примерно до %1$d%%</string>
-    <string name="capsule_opacity_note">Затухает только через 3 секунды без касаний и сразу возвращается, как только вы её коснётесь. Кольцо и значок не затухают, и капсула не затухает, когда нужны вы, когда показана строка текста или открыта карточка.</string>
+    <string name="capsule_opacity_medium">Средне (по умолчанию)</string>
+    <string name="capsule_opacity_light">Чуть прозрачнее</string>
+    <string name="capsule_opacity_solid">Не затухать</string>
+    <string name="capsule_opacity_note">Рядом с 20, 40, 70 и 100 ползунок притягивается к этому значению. Капсула затухает только через 3 секунды без касаний и сразу возвращается, как только вы её коснётесь; кольцо и значок не затухают, и она не затухает, когда нужны вы, когда показана строка текста или открыта карточка.</string>
 </resources>

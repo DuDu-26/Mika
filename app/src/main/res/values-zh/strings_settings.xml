@@ -162,11 +162,11 @@
     <string name="mcp_servers_refresh_all">测试全部</string>
     <string name="mcp_servers_allowlist">允许的工具(英文逗号分隔,留空为全部)</string>
     <string name="capsule_opacity_label">不碰它时</string>
-    <string name="capsule_opacity_solid">不变淡</string>
-    <string name="capsule_opacity_light">稍淡</string>
-    <string name="capsule_opacity_medium">适中（默认）</string>
+    <string name="capsule_opacity_pct">%1$d%%</string>
+    <string name="capsule_opacity_pct_named">%1$d%% · %2$s</string>
     <string name="capsule_opacity_faint">很淡</string>
-    <string name="capsule_opacity_solid_detail">一直是实色</string>
-    <string name="capsule_opacity_fade_to">淡到约 %1$d%%</string>
-    <string name="capsule_opacity_note">不碰它 3 秒后才变淡，一碰就恢复；外圈和角标保持实色。要你处理、展开成一行字或点开卡片时都不会变淡。</string>
+    <string name="capsule_opacity_medium">适中（默认）</string>
+    <string name="capsule_opacity_light">稍淡</string>
+    <string name="capsule_opacity_solid">不变淡</string>
+    <string name="capsule_opacity_note">拖到 20、40、70、100 附近会自动吸过去。不碰它 3 秒后才变淡，一碰就恢复；外圈和角标保持实色，要你处理、展开成一行字或点开卡片时都不会变淡。</string>
 </resources>

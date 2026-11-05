@@ -385,14 +385,30 @@ object CapsuleFade {
 }
 
 /**
- * 设置 › 悬浮胶囊里「不碰它时」的四档:一颗图标不碰它 [CapsuleFade.IDLE_MS] 后淡到 [alpha]。
- * 存成名字,认不出(没设过、旧版本)时是默认的 [Medium],就是原来固定的 [CapsuleFade.BALL]。
+ * 设置 › 悬浮胶囊里「不碰它时」的滑轨:一颗图标不碰它 [CapsuleFade.IDLE_MS] 后淡到百分之几,[MIN]–[MAX]。
+ * 滑轨上有几个吸附点([Stop]):拖到离它 [PULL] 以内就停在它上面(拖到 38、39 停在 40),像有磁力,
+ * 拖出这个范围才离开。没设过时是 [DEFAULT],就是原来固定的 [CapsuleFade.BALL]。
  */
-enum class CapsuleIdleOpacity(val alpha: Float) {
-    Solid(1f), Light(0.7f), Medium(CapsuleFade.BALL), Faint(0.2f);
+object CapsuleIdleOpacity {
+    const val MIN = 20
+    const val MAX = 100
+    const val DEFAULT = 40
+    /** 离吸附点几个百分点以内被吸过去。 */
+    const val PULL = 3
 
-    companion object {
-        val DEFAULT = Medium
-        fun parse(name: String?): CapsuleIdleOpacity = entries.firstOrNull { it.name == name } ?: DEFAULT
+    /** 吸附点,从最淡到实色;[DEFAULT] 是其中的 [Medium]。 */
+    enum class Stop(val percent: Int) { Faint(20), Medium(40), Light(70), Solid(100) }
+
+    fun clamp(percent: Int): Int = percent.coerceIn(MIN, MAX)
+
+    fun alpha(percent: Int): Float = clamp(percent) / 100f
+
+    /** 滑轨给的位置换成停下的值:就近取整,离某个吸附点 [PULL] 以内就停在那个点上。 */
+    fun snap(raw: Float): Int {
+        val p = clamp(kotlin.math.round(raw).toInt())
+        return Stop.entries.firstOrNull { kotlin.math.abs(it.percent - p) <= PULL }?.percent ?: p
     }
+
+    /** 正好停在吸附点上时是哪一个;不在点上为 null。 */
+    fun stopAt(percent: Int): Stop? = Stop.entries.firstOrNull { it.percent == percent }
 }

@@ -50,7 +50,19 @@ import com.wangzan101.mika.ui.theme.MikaIcons
 import com.wangzan101.mika.ui.theme.MikaTheme
 import com.wangzan101.mika.ui.theme.MikaType
 import com.wangzan101.mika.core.cap.phone.OperatingPace
-import kotlin.math.roundToInt
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
+import com.wangzan101.mika.ui.components.MikaLogo
 
 // ---------- 手机操作 ----------
 
@@ -360,27 +372,27 @@ object CapsuleSettingsCopy {
     val OPACITY_LABEL: String get() = tr(R.string.capsule_opacity_label)
     val OPACITY_NOTE: String get() = tr(R.string.capsule_opacity_note)
 
-    fun label(level: CapsuleIdleOpacity): String = when (level) {
-        CapsuleIdleOpacity.Solid -> tr(R.string.capsule_opacity_solid)
-        CapsuleIdleOpacity.Light -> tr(R.string.capsule_opacity_light)
-        CapsuleIdleOpacity.Medium -> tr(R.string.capsule_opacity_medium)
-        CapsuleIdleOpacity.Faint -> tr(R.string.capsule_opacity_faint)
+    fun stop(s: CapsuleIdleOpacity.Stop): String = when (s) {
+        CapsuleIdleOpacity.Stop.Faint -> tr(R.string.capsule_opacity_faint)
+        CapsuleIdleOpacity.Stop.Medium -> tr(R.string.capsule_opacity_medium)
+        CapsuleIdleOpacity.Stop.Light -> tr(R.string.capsule_opacity_light)
+        CapsuleIdleOpacity.Stop.Solid -> tr(R.string.capsule_opacity_solid)
     }
 
-    /** 「一直是实色」,或「淡到约 70%」:百分比按 [CapsuleIdleOpacity.alpha] 算,只有一处定数。 */
-    fun detail(level: CapsuleIdleOpacity): String =
-        if (level == CapsuleIdleOpacity.Solid) tr(R.string.capsule_opacity_solid_detail)
-        else tr(R.string.capsule_opacity_fade_to, (level.alpha * 100).roundToInt())
+    /** 滑轨上方那一行:停在吸附点上时「40% · 适中」,别处只写「55%」。 */
+    fun value(percent: Int): String =
+        CapsuleIdleOpacity.stopAt(percent)?.let { tr(R.string.capsule_opacity_pct_named, percent, stop(it)) }
+            ?: tr(R.string.capsule_opacity_pct, percent)
 }
 
 /**
- * 设置 › 悬浮胶囊:关闭 / 有任务时显示 / 一直显示(默认),下面一组是不碰它时淡到多少(四档,默认约 40%);
- * 都是选了当场生效。胶囊关着时淡不淡用不上,那一组变灰、点不了。
+ * 设置 › 悬浮胶囊:关闭 / 有任务时显示 / 一直显示(默认),下面是不碰它时淡到多少的滑轨(20–100,默认 40,见 [IdleOpacitySlider]);
+ * 都是选了当场生效。胶囊关着时淡不淡用不上,滑轨变灰、拖不动。
  */
 @Composable
 fun CapsuleScreen(
     mode: CapsuleMode, onMode: (CapsuleMode) -> Unit, onBack: () -> Unit,
-    opacity: CapsuleIdleOpacity = CapsuleIdleOpacity.DEFAULT, onOpacity: (CapsuleIdleOpacity) -> Unit = {},
+    opacity: Int = CapsuleIdleOpacity.DEFAULT, onOpacity: (Int) -> Unit = {},
 ) {
     PageScaffold(CapsuleSettingsCopy.TITLE, onBack) {
         GroupCard {
@@ -393,16 +405,47 @@ fun CapsuleScreen(
         }
         FooterNote(CapsuleSettingsCopy.FOOTNOTE)
         GroupLabel(CapsuleSettingsCopy.OPACITY_LABEL)
-        GroupCard {
-            CapsuleIdleOpacity.entries.forEachIndexed { i, level ->
-                RadioRow(
-                    CapsuleSettingsCopy.label(level), selected = level == opacity, onClick = { onOpacity(level) },
-                    subtitle = CapsuleSettingsCopy.detail(level), first = i == 0, enabled = mode != CapsuleMode.Off,
-                )
-            }
-        }
+        GroupCard { IdleOpacitySlider(opacity, enabled = mode != CapsuleMode.Off, onChange = onOpacity) }
         FooterNote(CapsuleSettingsCopy.OPACITY_NOTE)
         FooterNote(CapsuleSettingsCopy.BACKGROUND)
+    }
+}
+
+/**
+ * 不碰它时淡到多少的滑轨:左边一颗 Mika 图标按此刻的值变淡(在设置里胶囊本身不显示,看这颗就知道效果),
+ * 右边是「40% · 适中」;下面滑轨 20–100。拖动时就近取整,到吸附点附近被吸过去、轻震一下([CapsuleIdleOpacity.snap]);
+ * 松手才存([onChange]),拖的过程中不写设置。
+ */
+@Composable
+private fun IdleOpacitySlider(percent: Int, enabled: Boolean, onChange: (Int) -> Unit) {
+    val c = MikaTheme.colors
+    val haptic = LocalHapticFeedback.current
+    var value by remember(percent) { mutableIntStateOf(CapsuleIdleOpacity.clamp(percent)) }
+    val line = CapsuleSettingsCopy.value(value)
+    Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp)) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            MikaLogo(32.dp, Modifier.alpha(CapsuleIdleOpacity.alpha(value)), corner = 16.dp)
+            Text(line, style = MikaType.Body, color = if (enabled) c.ink else c.ink3)
+        }
+        Slider(
+            value = value.toFloat(),
+            onValueChange = { raw ->
+                val next = CapsuleIdleOpacity.snap(raw)
+                if (next != value) {
+                    if (CapsuleIdleOpacity.stopAt(next) != null) haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                    value = next
+                }
+            },
+            onValueChangeFinished = { onChange(value) },
+            valueRange = CapsuleIdleOpacity.MIN.toFloat()..CapsuleIdleOpacity.MAX.toFloat(),
+            enabled = enabled,
+            colors = SliderDefaults.colors(
+                thumbColor = c.accent, activeTrackColor = c.accent, inactiveTrackColor = c.fill,
+                disabledThumbColor = c.ink3, disabledActiveTrackColor = c.ink3, disabledInactiveTrackColor = c.fill,
+            ),
+            modifier = Modifier.fillMaxWidth().testTag("capsule-opacity-slider")
+                .semantics { contentDescription = CapsuleSettingsCopy.OPACITY_LABEL; stateDescription = line },
+        )
     }
 }
 
