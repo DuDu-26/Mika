@@ -766,7 +766,8 @@ class CapsuleController(
         fadeJob?.cancel()
         val v = view ?: return
         val idleFor = System.currentTimeMillis() - lastActive
-        alpha = if (expanded) 1f else CapsuleFade.alpha(v.kind, v.needCount, v.pill, idleFor)
+        // 每次现读设置:在设置里换了档,下次淡下去时就按新的(改设置时 Mika 在前台,胶囊本来不显示)
+        alpha = if (expanded) 1f else CapsuleFade.alpha(v.kind, v.needCount, v.pill, idleFor, CapsuleIdleOpacity.alpha(flags.capsuleIdleOpacity()))
         if (!expanded && idleFor < CapsuleFade.IDLE_MS) fadeJob = scope.launch {
             delay(CapsuleFade.IDLE_MS - idleFor)
             fade()

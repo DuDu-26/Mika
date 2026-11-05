@@ -169,4 +169,12 @@
     <string name="mcp_servers_status_fail">Error de conexión: %1$s</string>
     <string name="mcp_servers_refresh_all">Probar todo</string>
     <string name="mcp_servers_allowlist">Herramientas permitidas (separadas por comas, vacío = todas)</string>
+    <string name="capsule_opacity_label">Cuando no la tocas</string>
+    <string name="capsule_opacity_pct">%1$d%%</string>
+    <string name="capsule_opacity_pct_named">%1$d%% · %2$s</string>
+    <string name="capsule_opacity_faint">Muy atenuada</string>
+    <string name="capsule_opacity_medium">Media (predeterminada)</string>
+    <string name="capsule_opacity_light">Un poco atenuada</string>
+    <string name="capsule_opacity_solid">No atenuar</string>
+    <string name="capsule_opacity_note">Si arrastras cerca de 20, 40, 70 o 100, se ajusta a ese valor. Solo se atenúa tras 3 segundos sin tocarla y vuelve en cuanto la tocas; el anillo y la insignia no se atenúan, y nunca se atenúa cuando algo te necesita, cuando muestra una línea de texto o con la tarjeta abierta.</string>
 </resources>

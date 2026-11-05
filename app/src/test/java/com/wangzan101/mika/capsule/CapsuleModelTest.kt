@@ -445,6 +445,43 @@ class CapsuleModelTest {
         assertEquals(1f, CapsuleFade.alpha(CapsuleKind.HandedOver, 0, pill = false, idleFor = 60_000))
     }
 
+    @Test fun idleOpacityFollowsTheSettingButNeverWhenNeedingYou() {
+        // 默认就是原来固定的 40%,也是一个吸附点
+        assertEquals(CapsuleFade.BALL, CapsuleIdleOpacity.alpha(CapsuleIdleOpacity.DEFAULT))
+        assertEquals(CapsuleIdleOpacity.Stop.Medium, CapsuleIdleOpacity.stopAt(CapsuleIdleOpacity.DEFAULT))
+        // 存下的值越界时夹回 20–100
+        assertEquals(0.2f, CapsuleIdleOpacity.alpha(5))
+        assertEquals(1f, CapsuleIdleOpacity.alpha(150))
+        for (p in listOf(20, 33, 40, 55, 70, 100)) {
+            val a = CapsuleIdleOpacity.alpha(p)
+            assertEquals("$p", a, CapsuleFade.alpha(CapsuleKind.Running, 0, pill = false, idleFor = 60_000, idle = a))
+            // 还没到时间、展开着、要你处理:不论设成多少都是实色
+            assertEquals("$p", 1f, CapsuleFade.alpha(CapsuleKind.Running, 0, pill = false, idleFor = CapsuleFade.IDLE_MS - 1, idle = a))
+            assertEquals("$p", 1f, CapsuleFade.alpha(CapsuleKind.Done, 0, pill = true, idleFor = 60_000, idle = a))
+            assertEquals("$p", 1f, CapsuleFade.alpha(CapsuleKind.NeedConfirm, 1, pill = false, idleFor = 60_000, idle = a))
+        }
+    }
+
+    @Test fun sliderSnapsToStopsWhenClose() {
+        // 拖到 39 附近吸到 40;离开 3 个点以外才松开
+        for (raw in listOf(37f, 38.4f, 39f, 40f, 41.2f, 43f)) assertEquals("$raw", 40, CapsuleIdleOpacity.snap(raw))
+        assertEquals(36, CapsuleIdleOpacity.snap(36.2f))
+        assertEquals(44, CapsuleIdleOpacity.snap(44f))
+        // 其余几个点也一样,两头夹在 20–100 里
+        assertEquals(70, CapsuleIdleOpacity.snap(68f))
+        assertEquals(100, CapsuleIdleOpacity.snap(97.5f))
+        assertEquals(20, CapsuleIdleOpacity.snap(22f))
+        assertEquals(20, CapsuleIdleOpacity.snap(3f))
+        assertEquals(55, CapsuleIdleOpacity.snap(55.4f))
+        // 吸附点从淡到实排好,之间离得够远,两个点的吸附范围不重叠
+        val stops = CapsuleIdleOpacity.Stop.entries.map { it.percent }
+        assertEquals(stops.sorted(), stops)
+        stops.zipWithNext().forEach { (a, b) -> assertTrue("$a,$b", b - a > 2 * CapsuleIdleOpacity.PULL) }
+        assertEquals(CapsuleIdleOpacity.MIN, stops.first())
+        assertEquals(CapsuleIdleOpacity.MAX, stops.last())
+        assertNull(CapsuleIdleOpacity.stopAt(55))
+    }
+
     // ---------- 读屏 ----------
 
     @Test fun ballDescribesItsStatus() {
